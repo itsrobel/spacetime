@@ -31,3 +31,12 @@ In the instance that Django complains about packages run:
 ```sh
 uv run manage.py migrate
 ```
+
+## future
+
+Adding tailwind and daisyui might be worth it later
+once I understand django templating.
+
+also consider adding
+
+- [ ] cotton https://django-cotton.com/docs/quickstart
