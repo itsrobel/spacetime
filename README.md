@@ -22,7 +22,7 @@ uv pip install -r pyproject.toml
 
 ## Dev run
 
-styling
+Styling
 
 ```sh
 bunx tailwindcss -i ./spaceapp/static/input.css  -o ./spaceapp/static/output.css
