@@ -19,3 +19,15 @@ uv venv --python 3.12
 source .venv/bin/activate
 uv pip install -r pyproject.toml
 ```
+
+## Dev run
+
+```sh
+uv run manage.py runserver
+```
+
+In the instance that Django complains about packages run:
+
+```sh
+uv run manage.py migrate
+```
