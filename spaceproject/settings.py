@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_cotton",
 ]
 
 MIDDLEWARE = [
@@ -50,7 +51,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "spaceproject.urls"
-
+STATICFILES_DIRS = [BASE_DIR / "spaceapp" / "static"]
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -66,7 +67,6 @@ TEMPLATES = [
         },
     },
 ]
-print(BASE_DIR)
 
 WSGI_APPLICATION = "spaceproject.wsgi.application"
 

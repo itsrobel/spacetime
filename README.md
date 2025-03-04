@@ -22,6 +22,13 @@ uv pip install -r pyproject.toml
 
 ## Dev run
 
+styling
+
+```sh
+bunx tailwindcss -i ./spaceapp/static/input.css  -o ./spaceapp/static/output.css
+
+```
+
 ```sh
 uv run manage.py runserver
 ```
@@ -39,4 +46,11 @@ once I understand django templating.
 
 also consider adding
 
-- [ ] cotton https://django-cotton.com/docs/quickstart
+- styling
+
+  - [x] cotton https://django-cotton.com/docs/quickstart
+  - [x] [tailwind](https://tailwindcss.com/docs/installation/play-cdn)
+  - [x] [daisyui](https://daisyui.com/)
+  - [ ] switch to using bun instead of cdn
+
+- [ ] make the flash cards with dialog box
