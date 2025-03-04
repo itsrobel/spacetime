@@ -1,17 +1,25 @@
 # Spaced Rep application with Google calendar integration
 
-## setup
+## Learning Resource
 
-### install uv on windows
+- [Django](https://www.w3schools.com/django/index.php)
+- [Django Cotton](https://django-cotton.com/docs/components)
+- [Daisyui](https://daisyui.com/components/)
+- [UV](https://docs.astral.sh/uv/)
+- [Tailwindcss](https://tailwindcss.com/docs/editor-setup)
 
-```sh
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
+## Setup
 
-### install uv on macos/linux
+- Install UV on Macos/Linux
 
 ```sh
 curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+- Install UV on Windows
+
+```sh
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
 ```sh
@@ -22,12 +30,29 @@ uv pip install -r pyproject.toml
 
 ## Dev run
 
-Styling
+Install bun and build the styles
+
+### Install
+
+- Install on Macos/Linux
+
+  ```sh
+  curl -fsSL https://bun.sh/install | bash
+  ```
+
+- Install on Windows
+  ```sh
+  powershell -c "irm bun.sh/install.ps1|iex"
+  ```
+
+### Build
 
 ```sh
+bun install
 bunx tailwindcss -i ./spaceapp/static/input.css  -o ./spaceapp/static/output.css
-
 ```
+
+### Run
 
 ```sh
 uv run manage.py runserver
@@ -38,19 +63,3 @@ In the instance that Django complains about packages run:
 ```sh
 uv run manage.py migrate
 ```
-
-## future
-
-Adding tailwind and daisyui might be worth it later
-once I understand django templating.
-
-also consider adding
-
-- styling
-
-  - [x] cotton https://django-cotton.com/docs/quickstart
-  - [x] [tailwind](https://tailwindcss.com/docs/installation/play-cdn)
-  - [x] [daisyui](https://daisyui.com/)
-  - [ ] switch to using bun instead of cdn
-
-- [ ] make the flash cards with dialog box
