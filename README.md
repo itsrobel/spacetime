@@ -49,7 +49,7 @@ Install bun and build the styles
 
 ```sh
 bun install
-bunx tailwindcss -i ./spaceapp/static/input.css  -o ./spaceapp/static/output.css
+bunx tailwindcss -i ./flash/static/input.css  -o ./flash/static/output.css
 ```
 
 ### Run
@@ -63,3 +63,48 @@ In the instance that Django complains about packages run:
 ```sh
 uv run manage.py migrate
 ```
+
+## TODOS
+
+- [ ] Create the flash app
+
+  - [ ] Create the models
+    - deck
+      - owner_id
+      - public
+      - shared
+        - where shared is a list of
+          the non owners that can view the deck
+    - flash
+      - deck_id
+      - title
+      - content
+      - image
+      - progress_enum
+        - MASTERED
+        - LEARNING
+        - UNVERSED
+
+The progress made on one user should
+not effect the progress of another user.
+Each user should have their own copy of the deck
+
+- [ ] Create the authentication app
+
+  - User
+
+    - username
+    - email
+    - password
+    - groups
+    - user_permissions
+    - google_calendar
+
+  - [ ] maybe implement study groups
+
+- [ ] Create the calendar app
+
+  - [ ] figure out how the hell google Auth works
+  - [ ] setup the call back
+
+- [ ] figure out how data transfers and signals work in django

@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class SpaceappConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'spaceapp'
+    name = 'web'
