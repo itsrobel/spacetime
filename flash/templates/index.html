@@ -11,8 +11,11 @@
   <body class="h-full  bg-cover">
     <div class="m-8 justify-center ">
       <c-nav/>
-      <c-card title="Trees" url="space"> We have the best trees </c-card>
-      <c-card title="Spades" url="admin"> The best spades in the land </c-card>
+      {% for x in flash_cards %} 
+      <c-card id='{{x.id}}' title={{x.title}}> {{x.content}} </c-card>
+      {% endfor %}
+      <!--<c-card title="Trees" url="space"> We have the best trees </c-card>-->
+      <!--<c-card title="Spades" url="admin"> The best spades in the land </c-card>-->
     </div>
   </body>
 </html>

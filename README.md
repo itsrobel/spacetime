@@ -107,4 +107,6 @@ Each user should have their own copy of the deck
   - [ ] figure out how the hell google Auth works
   - [ ] setup the call back
 
-- [ ] figure out how data transfers and signals work in django
+- [ ] figure out how data transfers and signals work in Django
+- [ ] change font to something italic
+- [ ] use flash card ids for selection
