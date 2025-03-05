@@ -68,7 +68,7 @@ uv run manage.py migrate
 
 - [ ] Create the flash app
 
-  - [ ] Create the models
+  - [x] Create the models
     - deck
       - owner_id
       - public
@@ -109,4 +109,5 @@ Each user should have their own copy of the deck
 
 - [ ] figure out how data transfers and signals work in Django
 - [ ] change font to something italic
-- [ ] use flash card ids for selection
+- [x] use flash card ids for selection
+- [ ] update the flash card open to use hidden check boxes and labels
