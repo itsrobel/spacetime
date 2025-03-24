@@ -73,7 +73,7 @@ export default function DeckDashboard() {
 
       {/* Desktop Modal View */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>{selectedDeck?.title}</DialogTitle>
           </DialogHeader>

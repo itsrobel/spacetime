@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -14,7 +14,7 @@ interface FlashcardViewProps {
   onPrev: () => void;
 }
 
-export default function FlashcardView({
+function FlashcardView({
   card,
   index,
   total,
@@ -22,6 +22,13 @@ export default function FlashcardView({
   onPrev,
 }: FlashcardViewProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const handleFlip = (e: any) => {
+    // Prevent default only for touch events to avoid unwanted behaviors
+    if (e.pointerType === "touch") {
+      e.preventDefault();
+    }
+    setIsFlipped(!isFlipped);
+  };
 
   return (
     <div className="w-full max-w-md">
@@ -50,7 +57,7 @@ export default function FlashcardView({
       <div className="perspective h-[300px] w-full">
         <div
           className={`relative h-full w-full duration-500 preserve-3d ${isFlipped ? "rotate-y-180" : ""}`}
-          onClick={() => setIsFlipped(!isFlipped)}
+          onPointerDown={handleFlip}
         >
           {/* Front of card */}
           <Card
@@ -110,3 +117,4 @@ export default function FlashcardView({
     </div>
   );
 }
+export default memo(FlashcardView);

@@ -1,21 +1,30 @@
-"use client"
+"use client";
 
-import { Book, Clock } from "lucide-react"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import type { Deck } from "@/lib/types"
+import { Book, Clock } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import type { Deck } from "@/lib/types";
 
 interface DeckCardProps {
-  deck: Deck
-  onClick: () => void
+  deck: Deck;
+  onClick: () => void;
 }
 
 export default function DeckCard({ deck, onClick }: DeckCardProps) {
-  const progress = deck.progress || 0
-  const dueCards = deck.cards.filter((card) => card.isDue).length
+  const progress = deck.progress || 0;
+  const dueCards = deck.cards.filter((card) => card.isDue).length;
 
   return (
-    <Card className="flex h-full cursor-pointer flex-col transition-all hover:shadow-md" onClick={onClick}>
+    <Card
+      className="flex h-full cursor-pointer flex-col transition-all hover:shadow-md"
+      onClick={onClick}
+    >
       <CardHeader className="pb-2">
         <CardTitle className="line-clamp-1 text-lg">{deck.title}</CardTitle>
       </CardHeader>
@@ -41,6 +50,5 @@ export default function DeckCard({ deck, onClick }: DeckCardProps) {
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
-
