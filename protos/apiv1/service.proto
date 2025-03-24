@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package apiv1;
+option go_package = "github.com/itsrobel/spacetime/internal/services/apiv1";
+
+service MessageService {
+rpc Message(MessageData) returns (MessageData) {}
+}
+
+message MessageData {
+string content = 1;
+}
+
