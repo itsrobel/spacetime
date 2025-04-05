@@ -1,21 +1,26 @@
 export interface Flashcard {
-  id: string
-  front: string
-  back: string
-  tags?: string[]
-  lastReviewed?: Date
-  nextReview?: Date
-  isDue?: boolean
-  difficulty?: number // 0-4 scale, 0 = easy, 4 = hard
+  id: string;
+  front: string;
+  back: string;
+  tags?: string[];
+  lastReviewed?: Date;
+  nextReview?: Date;
+  isDue?: boolean;
+  difficulty?: number; // 0-4 scale, 0 = easy, 4 = hard
 }
 
 export interface Deck {
-  id: string
-  title: string
-  description: string
-  cards: Flashcard[]
-  progress?: number // 0-100
-  lastStudied?: Date
-  createdAt: Date
+  id: string;
+  title: string;
+  description: string;
+  cards: Flashcard[];
+  progress?: number; // 0-100
+  lastStudied?: Date;
+  createdAt: Date;
 }
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}

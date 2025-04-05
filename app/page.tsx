@@ -1,8 +1,32 @@
-import CustomLink from "@/components/custom-link"
-import { auth } from "auth"
+import CustomLink from "@/components/custom-link";
+import { PrismaClient } from "@/prisma/client";
+import { getUsers } from "@/prisma/client/sql";
+import { binaryToHex } from "@/lib/utils";
+import { getUserByGID } from "@/prisma/client/sql";
+import { createUser } from "@/prisma/client/sql";
+
+import { auth } from "auth";
 
 export default async function Index() {
-  const session = await auth()
+  const prisma = new PrismaClient();
+  const session = await auth();
+  let gId = session?.user?.googleId;
+  console.log(gId);
+  if (gId) {
+    const [gUser] = await prisma.$queryRawTyped(getUserByGID(gId));
+    console.log("fetched User: ", gUser);
+
+    if (gUser === undefined && session?.user.name && session.user.email) {
+      await prisma.$queryRawTyped(
+        createUser(gId, session?.user.name, session?.user.email),
+      );
+      console.log("created new users");
+    } else {
+      console.log(gUser.id);
+    }
+  }
+
+  // console.log(users);
 
   return (
     <div className="flex flex-col gap-6">
@@ -34,5 +58,5 @@ export default async function Index() {
         </pre>
       </div>
     </div>
-  )
+  );
 }

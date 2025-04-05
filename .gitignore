@@ -7,6 +7,7 @@ wheels/
 *.egg-info
 node_modules/
 
+
 # Virtual environments
 .venv
 
@@ -15,7 +16,7 @@ node_modules/
 
 .DS_Store
 
-node_modules/
+prisma/client/
 logs
 *.log
 npm-debug.log*
