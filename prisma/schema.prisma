@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "client"
+  provider        = "prisma-client-js"
+  output          = "client"
   previewFeatures = ["typedSql"]
 }
 
@@ -9,40 +9,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {  // Changed to PascalCase
-  id        String      @id @default(dbgenerated("(uuid())")) @db.Char(36)
-  googleId  String      @unique @db.Char(36)  // Added unique constraint
-  name      String      @db.Text
-  email     String      @unique @db.Text  // Added unique constraint
-  decks     Deck[]      @relation("DeckOwner")
-  accesses  DeckAccess[]
+model User {
+  id       String       @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  googleId String       @unique @db.Char(36) // Added unique constraint
+  name     String       @db.Text
+  email    String       @db.Text // Added unique constraint
+  decks    Deck[]       @relation("DeckOwner")
+  accesses DeckAccess[]
 }
 
 model Deck {
-  id        String      @id @default(dbgenerated("(uuid())")) @db.Char(36)
-  owner     User        @relation("DeckOwner", fields: [ownerId], references: [id])
-  ownerId   String      @db.Char(36)  // Changed to string to match User.id
-  public    AccessLevel @default(PRIVATE)  // Using enum instead of TinyInt
-  accesses  DeckAccess[]
-  flashcards Flash[]    @relation("DeckFlashcards")
-  
+  id         String       @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  owner      User         @relation("DeckOwner", fields: [ownerId], references: [id])
+  ownerId    String       @db.Char(36) // Changed to string to match User.id
+  public     AccessLevel  @default(PRIVATE) // Using enum instead of TinyInt
+  accesses   DeckAccess[]
+  flashcards Flash[]      @relation("DeckFlashcards")
+  DeckFlash  DeckFlash[]
+
   @@index([ownerId])
 }
 
 model Flash {
-  id       String @id @default(dbgenerated("(uuid())")) @db.Char(36)
-  title    String @db.Text
-  content  String @db.Text
-  decks    Deck[] @relation("DeckFlashcards")
+  id        String      @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  title     String      @db.Text
+  content   String      @db.Text
+  decks     Deck[]      @relation("DeckFlashcards")
+  DeckFlash DeckFlash[]
 }
 
 model DeckFlash {
-  deck    Deck   @relation(fields: [deckId], references: [id])
-  deckId  String @db.Char(36)
-  flash   Flash  @relation(fields: [flashId], references: [id])
-  flashId String @db.Char(36)
+  deck      Deck          @relation(fields: [deckId], references: [id])
+  deckId    String        @db.Char(36)
+  flash     Flash         @relation(fields: [flashId], references: [id])
+  flashId   String        @db.Char(36)
   progress  FlashProgress @default(BEGIN) // Per-deck progress tracking
-  createdAt DateTime @default(now())
+  createdAt DateTime      @default(now())
 
   @@id([deckId, flashId])
   @@index([deckId])
@@ -50,27 +52,27 @@ model DeckFlash {
 }
 
 model DeckAccess {
-  deck     Deck     @relation(fields: [deckId], references: [id])
-  deckId   String   @db.Char(36)
-  user     User     @relation(fields: [userId], references: [id])
-  userId   String   @db.Char(36)
-  level    AccessLevel @default(VIEW)
-  createdAt DateTime @default(now())
+  deck      Deck        @relation(fields: [deckId], references: [id])
+  deckId    String      @db.Char(36)
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String      @db.Char(36)
+  level     AccessLevel @default(VIEW)
+  createdAt DateTime    @default(now())
 
-  @@id([deckId, userId])  // Composite key instead of separate UUID
+  @@id([deckId, userId]) // Composite key instead of separate UUID
   @@index([deckId])
   @@index([userId])
 }
 
 enum AccessLevel {
   PRIVATE // 0 - For Deck.public
-  VIEW    // 1
-  EDIT    // 2
-  ADMIN   // 3
+  VIEW // 1
+  EDIT // 2
+  ADMIN // 3
 }
 
 enum FlashProgress {
-    MASTERY
-    INTERM
-    BEGIN
+  MASTERY
+  INTERM
+  BEGIN
 }

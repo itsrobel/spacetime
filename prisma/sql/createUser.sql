@@ -1,4 +1,4 @@
-INSERT INTO user (id, googleId , name, email)
+INSERT INTO User (id, googleId , name, email)
 VALUES (
   UUID(),
   ?,

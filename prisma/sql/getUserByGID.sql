@@ -1,3 +1,3 @@
 SELECT * 
-FROM user
+FROM User
 WHERE googleId = ?;
