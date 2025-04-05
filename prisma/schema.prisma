@@ -20,6 +20,7 @@ model User {
 
 model Deck {
   id         String       @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  name       String       @db.Text
   owner      User         @relation("DeckOwner", fields: [ownerId], references: [id])
   ownerId    String       @db.Char(36) // Changed to string to match User.id
   public     AccessLevel  @default(PRIVATE) // Using enum instead of TinyInt

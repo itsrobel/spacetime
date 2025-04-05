@@ -1,62 +1,15 @@
-import CustomLink from "@/components/custom-link";
-import { PrismaClient } from "@/prisma/client";
-import { getUsers } from "@/prisma/client/sql";
-import { binaryToHex } from "@/lib/utils";
-import { getUserByGID } from "@/prisma/client/sql";
-import { createUser } from "@/prisma/client/sql";
+import DeckDashboard from "@/components/deck-dashboard";
 
-import { auth } from "auth";
-
-export default async function Index() {
-  const prisma = new PrismaClient();
-  const session = await auth();
-  let gId = session?.user?.googleId;
-  console.log(gId);
-  if (gId) {
-    const [gUser] = await prisma.$queryRawTyped(getUserByGID(gId));
-    console.log("fetched User: ", gUser);
-
-    if (gUser === undefined && session?.user.name && session.user.email) {
-      await prisma.$queryRawTyped(
-        createUser(gId, session?.user.name, session?.user.email),
-      );
-      console.log("created new users");
-    } else {
-      console.log(gUser.id);
-    }
-  }
-
-  // console.log(users);
-
+export default function Home() {
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-3xl font-bold">NextAuth.js Example</h1>
-      <div>
-        This is an example site to demonstrate how to use{" "}
-        <CustomLink href="https://nextjs.authjs.dev">NextAuth.js</CustomLink>{" "}
-        for authentication. Check out the{" "}
-        <CustomLink href="/server-example" className="underline">
-          Server
-        </CustomLink>{" "}
-        and the{" "}
-        <CustomLink href="/client-example" className="underline">
-          Client
-        </CustomLink>{" "}
-        examples to see how to secure pages and get session data.
-      </div>
-      <div>
-        WebAuthn users are reset on every deploy, don't expect your test user(s)
-        to still be available after a few days. It is designed to only
-        demonstrate registration, login, and logout briefly.
-      </div>
-      <div className="flex flex-col rounded-md bg-gray-100">
-        <div className="rounded-t-md bg-gray-200 p-4 font-bold">
-          Current Session
-        </div>
-        <pre className="whitespace-pre-wrap break-all px-4 py-6">
-          {JSON.stringify(session, null, 2)}
-        </pre>
-      </div>
-    </div>
+    <main className="flex min-h-screen flex-col items-center p-4 md:p-8">
+      <h1 className="mb-2 text-3xl font-bold tracking-tight text-primary sm:text-4xl">
+        Flashcard Decks
+      </h1>
+      <p className="mb-8 text-center text-muted-foreground">
+        Study with spaced repetition to improve your memory
+      </p>
+      <DeckDashboard />
+    </main>
   );
 }
