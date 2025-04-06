@@ -30,7 +30,7 @@ export const POST = auth(async (req) => {
   return Response.json({ message: "Not authenticated" }, { status: 401 });
 });
 
-export const GET = auth(async (req) => {
+export const GET = auth(async (req: any) => {
   if (req.auth) {
     const gId = req.auth?.user.googleId;
     if (gId) {

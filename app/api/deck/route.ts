@@ -9,7 +9,7 @@ import {
 } from "@/prisma/client/sql";
 
 const prisma = new PrismaClient();
-export const POST = auth(async (req) => {
+export const POST = auth(async (req: any) => {
   if (req.auth) {
     const reqjson = await req.json();
     const gId = req.auth?.user.googleId;
@@ -27,7 +27,7 @@ export const POST = auth(async (req) => {
   return Response.json({ message: "Not authenticated" }, { status: 401 });
 });
 
-export const GET = auth(async (req) => {
+export const GET = auth(async (req: any) => {
   if (req.auth) {
     const gId = req.auth?.user.googleId;
     if (gId) {

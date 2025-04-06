@@ -17,4 +17,5 @@ using raw queries
 
 - [x] add users to the database
 - [ ] turn the user id into a string
-- [ ] add flashcards to the database
+- [x] add flashcards to the database
+- [ ] make add flash card to deck function

@@ -1,5 +1,5 @@
-import CustomLink from "./custom-link"
-import packageJSON from "next-auth/package.json"
+import CustomLink from "./custom-link";
+// import packageJSON from "next-auth/package.json"
 
 export default function Footer() {
   return (
@@ -20,10 +20,10 @@ export default function Footer() {
           src="https://authjs.dev/img/logo-sm.png"
           alt="Auth.js Logo"
         />
-        <CustomLink href="https://npmjs.org/package/next-auth">
-          {packageJSON.version}
-        </CustomLink>
+        {/* <CustomLink href="https://npmjs.org/package/next-auth"> */}
+        {/*   {packageJSON.version} */}
+        {/* </CustomLink> */}
       </div>
     </footer>
-  )
+  );
 }
