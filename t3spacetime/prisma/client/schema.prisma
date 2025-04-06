@@ -1,0 +1,140 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "client"
+  previewFeatures = ["typedSql"]
+}
+
+datasource db {
+  provider = "mysql"
+  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+  // Further reading:
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id          Int      @id @default(autoincrement())
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+
+  @@index([name])
+}
+
+// Necessary for Next auth
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? // @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? // @db.Text
+  session_state            String?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refresh_token_expires_in Int?
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String       @id @default(cuid())
+  name          String?
+  email         String?      @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  posts         Post[]
+  decks         Deck[]       @relation("DeckOwner")
+  flashcards    FlashCard[]  @relation("FlashOwner")
+  accesses      DeckAccess[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Deck {
+  id            String          @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  name          String          @db.Text
+  owner         User            @relation("DeckOwner", fields: [ownerId], references: [id])
+  ownerId       String          @db.Char(36) // Changed to string to match User.id
+  public        AccessLevel     @default(PRIVATE) // Using enum instead of TinyInt
+  accesses      DeckAccess[]
+  flashcards    FlashCard[]     @relation("DeckFlashCards")
+  deckflashcard DeckFlashCard[]
+
+  @@index([ownerId])
+}
+
+model FlashCard {
+  id            String          @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  owner         User            @relation("FlashOwner", fields: [ownerId], references: [id])
+  ownerId       String          @db.Char(36) // Changed to string to match User.id
+  title         String          @db.Text
+  content       String          @db.Text
+  decks         Deck[]          @relation("DeckFlashCards")
+  deckflashcard DeckFlashCard[]
+}
+
+model DeckFlashCard {
+  deck      Deck              @relation(fields: [deckId], references: [id])
+  deckId    String            @db.Char(36)
+  flash     FlashCard         @relation(fields: [flashId], references: [id])
+  flashId   String            @db.Char(36)
+  progress  FlashCardProgress @default(BEGIN) // Per-deck progress tracking
+  createdAt DateTime          @default(now())
+
+  @@id([deckId, flashId])
+  @@index([deckId])
+  @@index([flashId])
+}
+
+model DeckAccess {
+  deck      Deck        @relation(fields: [deckId], references: [id])
+  deckId    String      @db.Char(36)
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String      @db.Char(36)
+  level     AccessLevel @default(VIEW)
+  createdAt DateTime    @default(now())
+
+  @@id([deckId, userId]) // Composite key instead of separate UUID
+  @@index([deckId])
+  @@index([userId])
+}
+
+enum AccessLevel {
+  PRIVATE // 0 - For Deck.public
+  VIEW // 1
+  EDIT // 2
+  ADMIN // 3
+}
+
+enum FlashCardProgress {
+  MASTERY
+  INTERM
+  BEGIN
+}
