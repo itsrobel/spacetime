@@ -1,24 +1,27 @@
 import { auth } from "auth";
 
-import { AccessLevel, PrismaClient } from "@/prisma/client";
+import { PrismaClient } from "@/prisma/client";
 import {
-  createDeck,
   getUserByGID,
-  getDecks,
-  getFlashCardsInDesk,
+  createFlash,
+  getUserFlashCard,
 } from "@/prisma/client/sql";
 
 const prisma = new PrismaClient();
+
 export const POST = auth(async (req) => {
   if (req.auth) {
     const reqjson = await req.json();
     const gId = req.auth?.user.googleId;
+    console.log(reqjson);
+    console.log(gId);
     if (gId) {
       const [gUser] = await prisma.$queryRawTyped(getUserByGID(gId));
+      // await prisma
       await prisma.$queryRawTyped(
-        createDeck(reqjson.name, gUser.id, AccessLevel.PRIVATE),
+        createFlash(gUser.id, reqjson.title, reqjson.content),
       );
-      return Response.json({ data: "Successfully Created Deck" });
+      return Response.json({ data: "Successfully Created flash" });
     } else {
       return Response.json({ data: "Can't Get Google ID" });
     }
@@ -31,16 +34,9 @@ export const GET = auth(async (req) => {
   if (req.auth) {
     const gId = req.auth?.user.googleId;
     if (gId) {
-      const [gUser] = await prisma.$queryRawTyped(getUserByGID(gId));
-      const decks = await prisma.$queryRawTyped(getDecks(gUser.id));
-
-      decks.map(async (deck) => {
-        const flashcards = await prisma.$queryRawTyped(
-          getFlashCardsInDesk(deck.id),
-        );
-        console.log(flashcards);
-      });
-      return Response.json({ data: decks });
+      // const [gUser] = await prisma.$queryRawTyped(getUserByGID(gId));
+      const flash = await prisma.$queryRawTyped(getUserFlashCard());
+      return Response.json({ data: flash });
     } else {
       return Response.json({ data: "Can't Get Google ID" });
     }
