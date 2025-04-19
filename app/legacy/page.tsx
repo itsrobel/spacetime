@@ -2,6 +2,7 @@ import CustomLink from "@/components/custom-link";
 import { PrismaClient } from "@/prisma/client";
 import { getUserByGID } from "@/prisma/client/sql";
 import { createUser } from "@/prisma/client/sql";
+import { ZodError } from "zod";
 
 import { auth } from "auth";
 
