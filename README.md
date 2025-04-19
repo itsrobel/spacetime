@@ -18,3 +18,5 @@ using raw queries
 - [x] add users to the database
 - [ ] turn the user id into a string
 - [ ] add flashcards to the database
+- [ ] add next auth to trpc, turn the current end points to trpc end points
+- [ ] go crazy
