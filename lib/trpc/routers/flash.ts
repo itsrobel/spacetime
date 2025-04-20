@@ -5,6 +5,11 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/lib/trpc/constructor";
+import {
+  getUserByGID,
+  createFlash,
+  getUserFlashCard,
+} from "@/prisma/client/sql";
 
 export const flashRouter = createTRPCRouter({
   hello: publicProcedure
@@ -14,28 +19,26 @@ export const flashRouter = createTRPCRouter({
         greeting: `Hello ${input.text}`,
       };
     }),
-
-  // create: protectedProcedure
-  //   .input(z.object({ name: z.string().min(1) }))
-  //   .mutation(async ({ ctx, input }) => {
-  //     return ctx.prisma.post.create({
-  //       data: {
-  //         name: input.name,
-  //         createdBy: { connect: { id: ctx.session.user.id } },
-  //       },
-  //     });
-  //   }),
-
-  // getLatest: protectedProcedure.query(async ({ ctx }) => {
-  //   const post = await ctx.prisma.flash.findFirst({
-  //     orderBy: { createdAt: "desc" },
-  //     where: { createdBy: { id: ctx.session.user.id } },
-  //   });
-  //
-  //   return post ?? null;
-  // }),
-
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
+  getUser: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.session;
+  }),
+  createFlash: protectedProcedure
+    .input(z.object({ title: z.string(), content: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const gId = ctx.session.user?.googleId;
+      if (gId) {
+        const [gUser] = await ctx.prisma.$queryRawTyped(getUserByGID(gId));
+        await ctx.prisma.$queryRawTyped(
+          createFlash(gUser.id, input.title, input.content),
+        );
+        return { data: "Successfully Created flash" };
+      }
+    }),
+  getFlash: protectedProcedure.query(async ({ ctx }) => {
+    const gId = ctx.session.user.googleId;
+    if (gId) {
+      const flash = await ctx.prisma.$queryRawTyped(getUserFlashCard());
+      return { flash };
+    }
   }),
 });

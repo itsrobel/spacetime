@@ -3,8 +3,9 @@
 import { api } from "@/lib/trpc/client";
 
 export default function ClientGreetingPage() {
-  const greeting = api.flash.getSecretMessage.useQuery();
+  const greeting = api.flash.getUser.useQuery();
+  console.log(api.flash.getFlash.useQuery().data?.flash);
 
   if (!greeting.data) return <div>Loading...</div>;
-  return <div>{greeting.data}</div>;
+  return <div>{greeting.data.user.name}</div>;
 }

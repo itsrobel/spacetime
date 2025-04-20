@@ -1,5 +1,6 @@
 import { flashRouter } from "@/lib/trpc/routers/flash";
 import { createCallerFactory, createTRPCRouter } from "@/lib/trpc/constructor";
+import { deckRouter } from "./deck";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { createCallerFactory, createTRPCRouter } from "@/lib/trpc/constructor";
  */
 export const appRouter = createTRPCRouter({
   flash: flashRouter,
+  deck: deckRouter,
 });
 
 // export type definition of API

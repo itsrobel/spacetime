@@ -12,11 +12,11 @@ import { Progress } from "@/components/ui/progress";
 import { Deck } from "@/prisma/client";
 
 interface DeckCardProps {
-  deck: Deck;
+  title: string;
   onClick: () => void;
 }
 
-export default function DeckCard({ deck, onClick }: DeckCardProps) {
+export default function DeckCard({ title, onClick }: DeckCardProps) {
   // const progress = deck.progress || 0;
   // const dueCards = deck.cards.filter((card) => card.isDue).length;
   //
@@ -27,7 +27,7 @@ export default function DeckCard({ deck, onClick }: DeckCardProps) {
       onClick={onClick}
     >
       <CardHeader className="pb-2">
-        <CardTitle className="line-clamp-1 text-lg">{deck.name}</CardTitle>
+        <CardTitle className="line-clamp-1 text-lg">{title}</CardTitle>
       </CardHeader>
       <CardContent className="flex-1">
         <div className="flex items-center text-sm text-muted-foreground">
