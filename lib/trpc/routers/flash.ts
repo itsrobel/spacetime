@@ -9,7 +9,9 @@ import {
   getUserByGID,
   createFlash,
   getUserFlashCard,
+  addFlashToDeck,
 } from "@/prisma/client/sql";
+import { randomUUID } from "crypto";
 
 export const flashRouter = createTRPCRouter({
   hello: publicProcedure
@@ -23,16 +25,38 @@ export const flashRouter = createTRPCRouter({
     return ctx.session;
   }),
   createFlash: protectedProcedure
-    .input(z.object({ title: z.string(), content: z.string() }))
+    .input(
+      z.object({
+        title: z.string(),
+        content: z.string(),
+        decks: z.array(z.string()),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const gId = ctx.session.user?.googleId;
       if (gId) {
+        const flashId = randomUUID();
         const [gUser] = await ctx.prisma.$queryRawTyped(getUserByGID(gId));
         await ctx.prisma.$queryRawTyped(
-          createFlash(gUser.id, input.title, input.content),
+          createFlash(flashId, gUser.id, input.title, input.content),
         );
-        return { data: "Successfully Created flash" };
+        await Promise.all(
+          input.decks.map((deckId) =>
+            ctx.prisma.$queryRawTyped(addFlashToDeck(deckId, flashId)),
+          ),
+        );
+        return { data: { message: "success" } };
       }
+    }),
+
+  addToDeck: protectedProcedure
+    .input(z.object({ flashId: z.string(), deckId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.$queryRawTyped(
+        addFlashToDeck(input.deckId, input.flashId),
+      );
+      return { data: "Successfully added flash" };
+      // }
     }),
   getFlash: protectedProcedure.query(async ({ ctx }) => {
     const gId = ctx.session.user.googleId;

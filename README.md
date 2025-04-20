@@ -24,9 +24,15 @@ bunx prisma generate --sql
 
 what should the flashcard table look like?
 
-| title | content | add to deck | delete |
+| title | content | ...decks |
+
+- [ ] throw a message if the flash cards decks list is empty.
+      It will be placed in trash/deleted
 
 - [ ] Have the use specify the deck(s) to add the
       new flash card into on creation.
+
+  - [ ] ui selection
+  - [ ] backend implementation
 
 - [ ] if a flashcard is not in any decks delete the flashcard

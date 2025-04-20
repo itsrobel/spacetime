@@ -1,2 +1,2 @@
-INSERT IGNORE INTO DeckFlash (deckId, flashId, progress)
+INSERT INTO DeckFlash (deckId, flashId, progress)
 VALUES (?, ?, 'BEGIN');

@@ -1,4 +1,4 @@
-"use client";;
+"use client";
 import {
   Dialog,
   DialogContent,
@@ -25,14 +25,16 @@ export default function CreateDeck() {
     deckMutation.mutate({ title: newDeckName });
   };
 
-  const deckMutation = useMutation(api.deck.createDeck.mutationOptions({
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["deck.getDeck"],
-      });
-      setNewDeckName("");
-    },
-  }));
+  const deckMutation = useMutation(
+    api.deck.createDeck.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["deck.getDecks"],
+        });
+        setNewDeckName("");
+      },
+    }),
+  );
 
   // const handlePrevCard = () => {
   //   if (currentCardIndex > 0) {

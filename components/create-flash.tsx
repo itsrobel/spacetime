@@ -14,23 +14,22 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/lib/trpc/client";
 import { useMutation } from "@tanstack/react-query";
-import { MultiSelectCombobox, type ComboboxItem } from "./combobox-dialog";
-
-const frameworks: ComboboxItem[] = [
-  { value: "next.js", label: "Next.js" },
-  { value: "sveltekit", label: "SvelteKit" },
-  { value: "nuxt.js", label: "Nuxt.js" },
-  { value: "remix", label: "Remix" },
-  { value: "astro", label: "Astro" },
-];
+import { MultiSelectCombobox, type ComboboxItem } from "./multiselect-combobox";
+import { useQuery } from "@tanstack/react-query";
 
 export default function CreateFlashCard() {
   const api = useTRPC();
   const [newFlashSheetOpen, setNewFlashSheetOpen] = useState(false);
+  const decks = useQuery(api.deck.getDecks.queryOptions()).data?.decks;
+  const deckOptions = decks?.map((deck) => {
+    const dk: ComboboxItem = { value: deck.id, label: deck.name };
+    return dk;
+  });
 
   const [form, setForm] = useState({
     name: "",
     content: "",
+    deckIds: [] as string[], // New state for selected decks
   });
 
   const queryClient = useQueryClient();
@@ -42,7 +41,7 @@ export default function CreateFlashCard() {
           queryKey: api.flash.getFlash.queryKey(),
         });
         setNewFlashSheetOpen(false);
-        setForm({ name: "", content: "" });
+        setForm({ name: "", content: "", deckIds: [] });
       },
     }),
   );
@@ -57,10 +56,16 @@ export default function CreateFlashCard() {
 
   const handleCreateFlash = async (e: React.FormEvent) => {
     e.preventDefault();
-    flashMutation.mutate({
-      title: form.name,
-      content: form.content,
-    });
+    if (form.deckIds.length === 0) {
+      console.log("select a deck to add this to");
+    } else {
+      const flash = flashMutation.mutate({
+        title: form.name,
+        content: form.content,
+        decks: form.deckIds,
+      });
+      console.log(flash);
+    }
   };
 
   return (
@@ -92,6 +97,7 @@ export default function CreateFlashCard() {
                   id="name"
                   value={form.name}
                   onChange={handleInputChange}
+                  required
                   className="col-span-3"
                 />
               </div>
@@ -103,17 +109,22 @@ export default function CreateFlashCard() {
                   id="content"
                   value={form.content}
                   className="col-span-3"
+                  required
                   onChange={handleInputChange}
                 />
               </div>
             </div>
-            <MultiSelectCombobox
-              items={frameworks}
-              placeholder="No frameworks selected"
-              searchPlaceholder="Search framework..."
-              emptyMessage="No framework found."
-              onChange={(values) => console.log("Selected frameworks:", values)}
-            />
+            {deckOptions && (
+              <MultiSelectCombobox
+                items={deckOptions}
+                placeholder="No frameworks selected"
+                searchPlaceholder="Search framework..."
+                emptyMessage="No framework found."
+                onChange={(values) => {
+                  setForm((prev) => ({ ...prev, deckIds: values }));
+                }}
+              />
+            )}
             <SheetFooter className="bottom-0">
               <Button type="submit">Save changes</Button>
             </SheetFooter>
