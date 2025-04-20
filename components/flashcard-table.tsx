@@ -16,21 +16,7 @@ import { Flash } from "@/prisma/client";
 import { TabsContent } from "@/components/ui/tabs";
 export default function FlashCardTable() {
   const api = useTRPC();
-  // const queryKey = getQueryKey(api.flash.getFlash);
-  const query = useQuery(api.flash.getFlash.queryOptions());
-  const flashcards = query?.data?.flash;
-  console.log(flashcards);
-
-  // const query = useQuery({
-  //   queryKey: ["getflash"],
-  //   queryFn: api.flash.getFlash.useQuery(),
-  // });
-  // const flashcards = query.data.flash;
-  // const { data } = api.flash.getFlash.useQuery(undefined, {
-  //    queryKey, // Explicitly set the query key
-  //  });
-
-  // const flashcards = data?.flash;
+  const flashcards = useQuery(api.flash.getFlash.queryOptions())?.data?.flash;
 
   return (
     <div>

@@ -5,22 +5,29 @@ import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/lib/trpc/client";
-
 import { useMutation } from "@tanstack/react-query";
+import { MultiSelectCombobox, type ComboboxItem } from "./combobox-dialog";
+
+const frameworks: ComboboxItem[] = [
+  { value: "next.js", label: "Next.js" },
+  { value: "sveltekit", label: "SvelteKit" },
+  { value: "nuxt.js", label: "Nuxt.js" },
+  { value: "remix", label: "Remix" },
+  { value: "astro", label: "Astro" },
+];
 
 export default function CreateFlashCard() {
   const api = useTRPC();
-  const [newFlashDialogOpen, setNewFlashDialogOpen] = useState(false);
+  const [newFlashSheetOpen, setNewFlashSheetOpen] = useState(false);
 
-  // Combine both fields into one object
   const [form, setForm] = useState({
     name: "",
     content: "",
@@ -34,13 +41,12 @@ export default function CreateFlashCard() {
         queryClient.invalidateQueries({
           queryKey: api.flash.getFlash.queryKey(),
         });
-        setNewFlashDialogOpen(false);
+        setNewFlashSheetOpen(false);
         setForm({ name: "", content: "" });
       },
     }),
   );
 
-  // Generic handler for any input field
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setForm((prev) => ({
@@ -62,18 +68,21 @@ export default function CreateFlashCard() {
       <Button
         variant="outline"
         className="gap-2"
-        onClick={() => setNewFlashDialogOpen(true)}
+        onClick={() => setNewFlashSheetOpen(true)}
       >
         <Plus className="mr-2 h-4 w-4" />
         Create Flash
       </Button>
 
-      <Dialog open={newFlashDialogOpen} onOpenChange={setNewFlashDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Create New Deck</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleCreateFlash}>
+      <Sheet open={newFlashSheetOpen} onOpenChange={setNewFlashSheetOpen}>
+        <SheetContent side="right" className="sm:max-w-[425px]">
+          <SheetHeader>
+            <SheetTitle>Create New FlashCard</SheetTitle>
+          </SheetHeader>
+          <form
+            onSubmit={handleCreateFlash}
+            className="flex flex-col gap-4 h-full"
+          >
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
@@ -82,12 +91,12 @@ export default function CreateFlashCard() {
                 <Input
                   id="name"
                   value={form.name}
-                  className="col-span-3"
                   onChange={handleInputChange}
+                  className="col-span-3"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="content" className="text-right">
+                <Label htmlFor="Content" className="text-right">
                   Content
                 </Label>
                 <Input
@@ -98,12 +107,19 @@ export default function CreateFlashCard() {
                 />
               </div>
             </div>
-            <DialogFooter>
+            <MultiSelectCombobox
+              items={frameworks}
+              placeholder="No frameworks selected"
+              searchPlaceholder="Search framework..."
+              emptyMessage="No framework found."
+              onChange={(values) => console.log("Selected frameworks:", values)}
+            />
+            <SheetFooter className="bottom-0">
               <Button type="submit">Save changes</Button>
-            </DialogFooter>
+            </SheetFooter>
           </form>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
