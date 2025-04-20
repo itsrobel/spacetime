@@ -16,10 +16,10 @@ import { Label } from "@/components/ui/label";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/trpc/client";
 export default function CreateDeck() {
-  const queryClient = useQueryClient();
   const [newDeckDialogOpen, setNewDeckDialogOpen] = useState(false);
-
   const [newDeckName, setNewDeckName] = useState("");
+
+  const queryClient = useQueryClient();
   const handleNewDeck = async () => {
     deckMutation.mutate({ title: newDeckName });
   };
