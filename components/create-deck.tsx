@@ -1,5 +1,4 @@
-"use client";
-
+"use client";;
 import {
   Dialog,
   DialogContent,
@@ -14,8 +13,10 @@ import { Input } from "@/components/ui/input";
 
 import { Label } from "@/components/ui/label";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/trpc/client";
+import { useTRPC } from "@/lib/trpc/client";
+import { useMutation } from "@tanstack/react-query";
 export default function CreateDeck() {
+  const api = useTRPC();
   const [newDeckDialogOpen, setNewDeckDialogOpen] = useState(false);
   const [newDeckName, setNewDeckName] = useState("");
 
@@ -24,14 +25,14 @@ export default function CreateDeck() {
     deckMutation.mutate({ title: newDeckName });
   };
 
-  const deckMutation = api.deck.createDeck.useMutation({
+  const deckMutation = useMutation(api.deck.createDeck.mutationOptions({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["deck.getDeck"],
       });
       setNewDeckName("");
     },
-  });
+  }));
 
   // const handlePrevCard = () => {
   //   if (currentCardIndex > 0) {

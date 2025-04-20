@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/trpc/client";
+import { useTRPC } from "@/lib/trpc/client";
 import {
   Table,
   TableBody,
@@ -15,8 +15,11 @@ import {
 import { Flash } from "@/prisma/client";
 import { TabsContent } from "@/components/ui/tabs";
 export default function FlashCardTable() {
+  const api = useTRPC();
   // const queryKey = getQueryKey(api.flash.getFlash);
-  const flashcards = api.flash.getFlash.useQuery().data?.flash;
+  const query = useQuery(api.flash.getFlash.queryOptions());
+  const flashcards = query?.data?.flash;
+  console.log(flashcards);
 
   // const query = useQuery({
   //   queryKey: ["getflash"],

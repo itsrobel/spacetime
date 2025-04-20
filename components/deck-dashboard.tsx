@@ -1,4 +1,4 @@
-"use client";
+"use client";;
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TabsContent } from "@/components/ui/tabs";
@@ -12,12 +12,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { api } from "@/lib/trpc/client";
+import { useTRPC } from "@/lib/trpc/client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 
+import { useQuery } from "@tanstack/react-query";
+
 export default function DeckDashboard() {
-  const decks = api.deck.getDeck.useQuery().data?.decks;
+  const api = useTRPC();
+  const decks = useQuery(api.deck.getDeck.queryOptions()).data?.decks;
   const isMobile = useIsMobile();
   const router = useRouter();
 

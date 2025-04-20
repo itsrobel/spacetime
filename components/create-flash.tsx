@@ -12,9 +12,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/trpc/client";
+import { useTRPC } from "@/lib/trpc/client";
+
+import { useMutation } from "@tanstack/react-query";
 
 export default function CreateFlashCard() {
+  const api = useTRPC();
   const [newFlashDialogOpen, setNewFlashDialogOpen] = useState(false);
 
   // Combine both fields into one object
@@ -25,15 +28,17 @@ export default function CreateFlashCard() {
 
   const queryClient = useQueryClient();
 
-  const flashMutation = api.flash.createFlash.useMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["flash.getFlash"],
-      });
-      setNewFlashDialogOpen(false);
-      setForm({ name: "", content: "" });
-    },
-  });
+  const flashMutation = useMutation(
+    api.flash.createFlash.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: api.flash.getFlash.queryKey(),
+        });
+        setNewFlashDialogOpen(false);
+        setForm({ name: "", content: "" });
+      },
+    }),
+  );
 
   // Generic handler for any input field
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
