@@ -18,6 +18,7 @@ export default function FlashCardTable() {
   const api = useTRPC();
   const flashcards = useQuery(api.flash.getFlash.queryOptions())?.data?.flash;
   //TODO: fetch decks given the flashID
+  //NOTE: I would have to make each change update the trpc endpoint
 
   return (
     <div>

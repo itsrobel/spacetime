@@ -13,13 +13,18 @@ bunx prisma generate --sql
 
 - [x] add prisma
 - [x] add users to the database
-- [ ] turn the user id into a string
+- [x] turn the user id into a string
 - [x] add flashcards to the database
 - [x] add next auth to trpc, turn the current end points to trpc end points
 
-- [ ] I need to add the flashcards to the decks
-- [ ] I need a way to remove flashcards from deck
-- [ ] I need a way to delete decks
+- [x] I need to add the flashcards to the decks
+
+- [ ] instead of going directly into flashcard view for when clicking on a deck
+      have a deck page that shows the deck details and progress
+
+  - [ ] I need a way to delete decks
+  - [ ] I need a way to remove flashcards from deck
+
 - [ ] I need to be able to update the visibility of decks
 
 what should the flashcard table look like?
@@ -36,3 +41,7 @@ what should the flashcard table look like?
   - [ ] backend implementation
 
 - [ ] if a flashcard is not in any decks delete the flashcard
+- [ ] fix the search on multi deck selection
+- [ ] have the "know" and "don't know" buttons actually do shit
+- [ ] add back mobile swiping
+- [ ] fix the deck view on decktop
