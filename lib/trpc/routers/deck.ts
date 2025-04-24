@@ -8,7 +8,10 @@ import {
   getFlashCardsInDesk,
 } from "@/prisma/client/sql";
 import { AccessLevel } from "@/prisma/client";
-import { calculateDeckProgress, createCalendarEvent } from "@/lib/google-calendar";
+import {
+  calculateDeckProgress,
+  createCalendarEvent,
+} from "@/lib/google-calendar";
 
 export const deckRouter = createTRPCRouter({
   createDeck: protectedProcedure
@@ -25,20 +28,22 @@ export const deckRouter = createTRPCRouter({
     }),
 
   createDeckProgressEvent: protectedProcedure
-    .input(z.object({
-      deckId: z.string(),
-      eventTitle: z.string().optional(),
-      eventDescription: z.string().optional(),
-      startDateTime: z.date(),
-      endDateTime: z.date(),
-      timeZone: z.string().optional()
-    }))
+    .input(
+      z.object({
+        deckId: z.string(),
+        eventTitle: z.string().optional(),
+        eventDescription: z.string().optional(),
+        startDateTime: z.date(),
+        endDateTime: z.date(),
+        timeZone: z.string().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const gId = ctx.session.user.googleId;
       const accessToken = ctx.session.accessToken;
 
       if (!gId || !accessToken) {
-        throw new Error('Not authenticated or missing Google permissions');
+        throw new Error("Not authenticated or missing Google permissions");
       }
 
       // Get flash cards in the deck to calculate progress
@@ -50,8 +55,9 @@ export const deckRouter = createTRPCRouter({
       const progress = calculateDeckProgress(flashcards);
 
       // Create a calendar event with progress information
-      const eventTitle = input.eventTitle || 'Flashcard Deck Review';
-      const eventDescription = input.eventDescription || 
+      const eventTitle = input.eventTitle || "Flashcard Deck Review";
+      const eventDescription =
+        input.eventDescription ||
         `Review your flashcard deck: Progress ${progress}%. ${flashcards.length} cards total.`;
 
       const event = await createCalendarEvent(accessToken, {
@@ -59,14 +65,14 @@ export const deckRouter = createTRPCRouter({
         description: eventDescription,
         startDateTime: input.startDateTime,
         endDateTime: input.endDateTime,
-        timeZone: input.timeZone
+        timeZone: input.timeZone,
       });
 
-      return { 
-        success: true, 
-        progress, 
+      return {
+        success: true,
+        progress,
         totalCards: flashcards.length,
-        event 
+        event,
       };
     }),
   getDecks: protectedProcedure.query(async ({ ctx }) => {

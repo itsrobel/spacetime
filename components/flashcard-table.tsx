@@ -28,7 +28,7 @@ export default function FlashCardTable() {
             <TableRow>
               <TableHead className="w-[100px]">Title</TableHead>
               <TableHead className="text-right">Content</TableHead>
-              {/* <TableHead className="text-right">Decks</TableHead> */}
+              <TableHead className="text-right">Decks</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -42,24 +42,14 @@ export default function FlashCardTable() {
                 >
                   <TableCell className="font-medium">{flash.title}</TableCell>
                   <TableCell className="text-right">{flash.content}</TableCell>
-                  {/* <TableCell className="text-right"></TableCell> */}
+                  <TableCell className="text-right">
+                    {/*TODO: multi table delete */}
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </TabsContent>
-      {/* <Dialog */}
-      {/*   open={!!selectedDeck} */}
-      {/*   onOpenChange={(open) => setSelectedDeck(open ? selectedDeck : "")} */}
-      {/* > */}
-      {/*   {deck && ( */}
-      {/*     <DialogContent> */}
-      {/*       <DialogHeader> */}
-      {/*         <DialogTitle>{deck.name}</DialogTitle> */}
-      {/*       </DialogHeader> */}
-      {/*     </DialogContent> */}
-      {/*   )} */}
-      {/* </Dialog> */}
     </div>
   );
 }

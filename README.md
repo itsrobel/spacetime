@@ -29,10 +29,7 @@ what should the flashcard table look like?
 
 | title | content | ...decks |
 
-- [ ] throw a message if the flash cards decks list is empty.
-      It will be placed in trash/deleted
-
-- [ ] Have the use specify the deck(s) to add the
+- [x] Have the use specify the deck(s) to add the
       new flash card into on creation.
 
   - [ ] ui selection
@@ -40,7 +37,7 @@ what should the flashcard table look like?
 
 - [ ] if a flashcard is not in any decks delete the flashcard !
 - [ ] fix the search on multi deck selection ! This I have to do
-- [ ] have the "know" and "don't know" buttons actually do shit
+- [x] have the "know" and "don't know" buttons actually do shit
 - [ ] add back mobile swiping
 - [ ] fix the deck view on desktop
 - [ ] I need to be able to update the visibility of decks
