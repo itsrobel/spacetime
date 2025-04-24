@@ -42,3 +42,5 @@ what should the flashcard table look like?
 - [ ] fix the deck view on desktop
 - [ ] I need to be able to update the visibility of decks
 - [ ] make links that are shareable
+- [ ] delete the User table and just use the information from google
+- [ ] add auth check to every endpoint

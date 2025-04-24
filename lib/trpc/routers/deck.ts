@@ -97,12 +97,6 @@ export const deckRouter = createTRPCRouter({
         // const decks = await ctx.prisma.$queryRawTyped(getDecks(gUser.id));
 
         return { flashcards };
-        // decks.map(async (deck) => {
-        //   const flashcards = await ctx.prisma.$queryRawTyped(
-        //     getFlashCardsInDesk(deck.id),
-        //   );
-        //   console.log(flashcards);
-        // });
       }
     }),
 });
