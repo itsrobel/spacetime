@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { TabsContent } from "@/components/ui/tabs";
 
 import DeckCard from "@/components/deck-card";
+import CreateDeckEvent from "@/components/create-deck-event";
 import {
   Dialog,
   DialogContent,
@@ -55,12 +56,17 @@ export default function DeckDashboard() {
         onOpenChange={(open) => setSelectedDeck(open ? selectedDeck : "")}
       >
         {deck && (
-          <DialogContent>
+          <DialogContent className="max-w-4xl">
             <DialogHeader>
               <DialogTitle>{deck.name}</DialogTitle>
             </DialogHeader>
-            <div className="flex flex-col items-center">
-              <FlashcardView deck_id={deck.id} />
+            <div className="flex flex-col gap-6 md:flex-row">
+              <div className="flex-1">
+                <FlashcardView deck_id={deck.id} />
+              </div>
+              <div className="w-full md:w-80">
+                <CreateDeckEvent deckId={deck.id} deckName={deck.name} />
+              </div>
             </div>
             <DialogFooter></DialogFooter>
           </DialogContent>

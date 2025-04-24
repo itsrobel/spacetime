@@ -25,8 +25,6 @@ bunx prisma generate --sql
   - [ ] I need a way to delete decks
   - [ ] I need a way to remove flashcards from deck
 
-- [ ] I need to be able to update the visibility of decks
-
 what should the flashcard table look like?
 
 | title | content | ...decks |
@@ -40,8 +38,10 @@ what should the flashcard table look like?
   - [ ] ui selection
   - [ ] backend implementation
 
-- [ ] if a flashcard is not in any decks delete the flashcard
-- [ ] fix the search on multi deck selection
+- [ ] if a flashcard is not in any decks delete the flashcard !
+- [ ] fix the search on multi deck selection ! This I have to do
 - [ ] have the "know" and "don't know" buttons actually do shit
 - [ ] add back mobile swiping
-- [ ] fix the deck view on decktop
+- [ ] fix the deck view on desktop
+- [ ] I need to be able to update the visibility of decks
+- [ ] make links that are shareable

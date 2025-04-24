@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
             <TRPCReactProvider>{children}</TRPCReactProvider>
           </main>
           <Footer />
+          <Toaster />
         </div>
       </body>
     </html>

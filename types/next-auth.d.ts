@@ -6,6 +6,7 @@ declare module "next-auth" {
     user: {
       googleId?: string; // Add custom fields like Google ID here
     } & DefaultSession["user"];
+    accessToken?: string; // Add access token to session
   }
 
   interface User {
@@ -16,5 +17,6 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     googleId?: string; // Add custom fields to JWT if needed
+    accessToken?: string; // Add access token to JWT
   }
 }

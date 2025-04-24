@@ -43,12 +43,13 @@ model Flash {
 }
 
 model DeckFlash {
-  deck      Deck          @relation(fields: [deckId], references: [id])
-  deckId    String        @db.Char(36)
-  flash     Flash         @relation(fields: [flashId], references: [id])
-  flashId   String        @db.Char(36)
-  progress  FlashProgress @default(BEGIN) // Per-deck progress tracking
-  createdAt DateTime      @default(now())
+  deck              Deck          @relation(fields: [deckId], references: [id])
+  deckId            String        @db.Char(36)
+  flash             Flash         @relation(fields: [flashId], references: [id])
+  flashId           String        @db.Char(36)
+  progress          FlashProgress @default(BEGIN) // Per-deck progress tracking
+  consecutiveCorrect Int           @default(0) // Counter for consecutive "I know" answers
+  createdAt         DateTime      @default(now())
 
   @@id([deckId, flashId])
   @@index([deckId])

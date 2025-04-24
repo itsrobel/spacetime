@@ -8,6 +8,7 @@ import {
   getFlashCardsInDesk,
 } from "@/prisma/client/sql";
 import { AccessLevel } from "@/prisma/client";
+import { calculateDeckProgress, createCalendarEvent } from "@/lib/google-calendar";
 
 export const deckRouter = createTRPCRouter({
   createDeck: protectedProcedure
@@ -21,6 +22,52 @@ export const deckRouter = createTRPCRouter({
         );
         return { data: "Successfully Created flash" };
       }
+    }),
+
+  createDeckProgressEvent: protectedProcedure
+    .input(z.object({
+      deckId: z.string(),
+      eventTitle: z.string().optional(),
+      eventDescription: z.string().optional(),
+      startDateTime: z.date(),
+      endDateTime: z.date(),
+      timeZone: z.string().optional()
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const gId = ctx.session.user.googleId;
+      const accessToken = ctx.session.accessToken;
+
+      if (!gId || !accessToken) {
+        throw new Error('Not authenticated or missing Google permissions');
+      }
+
+      // Get flash cards in the deck to calculate progress
+      const flashcards = await ctx.prisma.$queryRawTyped(
+        getFlashCardsInDesk(input.deckId),
+      );
+
+      // Calculate deck progress
+      const progress = calculateDeckProgress(flashcards);
+
+      // Create a calendar event with progress information
+      const eventTitle = input.eventTitle || 'Flashcard Deck Review';
+      const eventDescription = input.eventDescription || 
+        `Review your flashcard deck: Progress ${progress}%. ${flashcards.length} cards total.`;
+
+      const event = await createCalendarEvent(accessToken, {
+        summary: eventTitle,
+        description: eventDescription,
+        startDateTime: input.startDateTime,
+        endDateTime: input.endDateTime,
+        timeZone: input.timeZone
+      });
+
+      return { 
+        success: true, 
+        progress, 
+        totalCards: flashcards.length,
+        event 
+      };
     }),
   getDecks: protectedProcedure.query(async ({ ctx }) => {
     const gId = ctx.session.user.googleId;

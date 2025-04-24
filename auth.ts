@@ -21,7 +21,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: !!process.env.AUTH_DEBUG,
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: UnstorageAdapter(storage),
-  providers: [Google],
+  providers: [
+    Google({
+      authorization: {
+        params: {
+          scope: 'openid email profile https://www.googleapis.com/auth/calendar'
+        }
+      }
+    })
+  ],
   basePath: "/auth",
   session: { strategy: "jwt" },
   callbacks: {
@@ -34,6 +42,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (trigger === "update") token.name = session.user.name;
       if (account?.provider === "google") {
         token.sub = account.providerAccountId;
+        token.accessToken = account.access_token;
       }
 
       // console.log(token);
