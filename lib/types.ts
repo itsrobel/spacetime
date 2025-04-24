@@ -1,7 +1,9 @@
 export interface Flashcard {
   id: string;
-  front: string;
-  back: string;
+  title: string;
+  content: string;
+  progress?: string;
+  consecutiveCorrect?: number;
   tags?: string[];
   lastReviewed?: Date;
   nextReview?: Date;
