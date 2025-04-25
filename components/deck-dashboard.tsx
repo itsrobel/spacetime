@@ -39,7 +39,7 @@ export default function DeckDashboard() {
   return (
     <div>
       <TabsContent value="decks">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 ">
           {decks &&
             decks.map((deck) => (
               <DeckCard
@@ -68,7 +68,6 @@ export default function DeckDashboard() {
                 <CreateDeckEvent deckId={deck.id} deckName={deck.name} />
               </div>
             </div>
-            <DialogFooter></DialogFooter>
           </DialogContent>
         )}
       </Dialog>
