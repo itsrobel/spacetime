@@ -118,12 +118,13 @@ export default function CreateFlashCard() {
               <div>
                 <MultiSelectCombobox
                   items={deckOptions}
+                  value={form.deckIds}
                   placeholder="No frameworks selected"
                   searchPlaceholder="Search framework..."
                   emptyMessage="No framework found."
-                  onChange={(values) => {
-                    setForm((prev) => ({ ...prev, deckIds: values }));
-                  }}
+                  onChange={(selectedDeckIds) =>
+                    setForm((prev) => ({ ...prev, deckIds: selectedDeckIds }))
+                  }
                 />
               </div>
             )}
