@@ -1,2 +1,2 @@
-INSERT INTO Deck (id, name , ownerId,  public)
+INSERT INTO Deck (id, name , userGoogleId,  public)
 VALUES (UUID(), ?, ? , ?);

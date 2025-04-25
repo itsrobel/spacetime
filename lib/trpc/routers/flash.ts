@@ -6,7 +6,6 @@ import {
   publicProcedure,
 } from "@/lib/trpc/constructor";
 import {
-  getUserByGID,
   createFlash,
   getUserFlashCard,
   addFlashToDeck,
@@ -43,9 +42,8 @@ export const flashRouter = createTRPCRouter({
       const gId = ctx.session.user?.googleId;
       if (gId) {
         const flashId = randomUUID();
-        const [gUser] = await ctx.prisma.$queryRawTyped(getUserByGID(gId));
         await ctx.prisma.$queryRawTyped(
-          createFlash(flashId, gUser.id, input.title, input.content),
+          createFlash(flashId, gId, input.title, input.content),
         );
         await Promise.all(
           input.decks.map((deckId) =>
@@ -83,7 +81,7 @@ export const flashRouter = createTRPCRouter({
   getFlash: protectedProcedure.query(async ({ ctx }) => {
     const gId = ctx.session.user.googleId;
     if (gId) {
-      const flash = await ctx.prisma.$queryRawTyped(getUserFlashCard());
+      const flash = await ctx.prisma.$queryRawTyped(getUserFlashCard(gId));
       return { flash };
     }
   }),

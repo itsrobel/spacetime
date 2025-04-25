@@ -1,1 +1,1 @@
-SELECT * FROM Deck WHERE ownerId = ?;
+SELECT * FROM Deck WHERE userGoogleId = ?;

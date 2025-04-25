@@ -1,1 +1,1 @@
-SELECT * FROM Flash
+SELECT * FROM Flash WHERE userGoogleId = ?;

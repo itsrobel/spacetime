@@ -1,12 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/lib/trpc/constructor";
-import {
-  createDeck,
-  getUserByGID,
-  getDecks,
-  getFlashCardsInDesk,
-} from "@/prisma/client/sql";
+import { createDeck, getDecks, getFlashCardsInDesk } from "@/prisma/client/sql";
 import { AccessLevel } from "@/prisma/client";
 import {
   calculateDeckProgress,
@@ -19,9 +14,8 @@ export const deckRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const gId = ctx.session.user?.googleId;
       if (gId) {
-        const [gUser] = await ctx.prisma.$queryRawTyped(getUserByGID(gId));
         await ctx.prisma.$queryRawTyped(
-          createDeck(input.title, gUser.id, AccessLevel.PRIVATE),
+          createDeck(input.title, gId, AccessLevel.PRIVATE),
         );
         return { data: "Successfully Created flash" };
       }
@@ -78,8 +72,7 @@ export const deckRouter = createTRPCRouter({
   getDecks: protectedProcedure.query(async ({ ctx }) => {
     const gId = ctx.session.user.googleId;
     if (gId) {
-      const [gUser] = await ctx.prisma.$queryRawTyped(getUserByGID(gId));
-      const decks = await ctx.prisma.$queryRawTyped(getDecks(gUser.id));
+      const decks = await ctx.prisma.$queryRawTyped(getDecks(gId));
       return { decks };
     }
   }),
@@ -90,7 +83,6 @@ export const deckRouter = createTRPCRouter({
       const gId = ctx.session.user.googleId;
       if (gId) {
         //TODO:check if use owns the deck
-        const [gUser] = await ctx.prisma.$queryRawTyped(getUserByGID(gId));
         const flashcards = await ctx.prisma.$queryRawTyped(
           getFlashCardsInDesk(input.deckId),
         );

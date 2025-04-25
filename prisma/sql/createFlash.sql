@@ -1,2 +1,2 @@
-INSERT INTO Flash (id, ownerId, title, content)
+INSERT INTO Flash (id, userGoogleId, title, content)
 VALUES (?, ? ,?, ?)

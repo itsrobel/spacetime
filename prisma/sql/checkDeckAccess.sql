@@ -1,2 +1,2 @@
 SELECT level FROM DeckAccess
-WHERE deckId = ? AND userId = ?;
+WHERE deckId = ? AND userGoogleId = ?;
