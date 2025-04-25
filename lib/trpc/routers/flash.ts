@@ -1,10 +1,6 @@
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "@/lib/trpc/constructor";
+import { createTRPCRouter, protectedProcedure } from "@/lib/trpc/constructor";
 import {
   createFlash,
   getUserFlashCard,
@@ -16,20 +12,12 @@ import {
   deleteFromDeck,
   checkFlashExist,
   deleteFlash,
+  getAllFlashDecks,
+  getDeckIdFromFlashId,
 } from "@/prisma/client/sql";
 import { randomUUID } from "crypto";
 
 export const flashRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
-  getUser: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.session;
-  }),
   createFlash: protectedProcedure
     .input(
       z.object({
@@ -85,6 +73,75 @@ export const flashRouter = createTRPCRouter({
       return { flash };
     }
   }),
+
+  getDecks: protectedProcedure
+    .input(z.object({ flashId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const gId = ctx.session.user.googleId;
+      if (gId) {
+        const rows = await ctx.prisma.$queryRawTyped(getAllFlashDecks(gId));
+        const flashDeckMap: { [flashId: string]: string[] } = {};
+        rows.forEach(({ flashId, deckId }) => {
+          if (!flashDeckMap[flashId]) {
+            flashDeckMap[flashId] = [];
+          }
+          flashDeckMap[flashId].push(deckId);
+        });
+        return { flashDeckMap };
+      }
+    }),
+
+  updateFlashDecks: protectedProcedure
+    .input(
+      z.object({
+        flashId: z.string(),
+        deckIds: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const gId = ctx.session.user.googleId;
+      if (!gId) throw new Error("Not authenticated");
+
+      // Get current deck IDs for this flashcard
+      const currentRows = await ctx.prisma.$queryRawTyped(
+        getDeckIdFromFlashId(input.flashId),
+      );
+      const currentDeckIds = currentRows?.map((row) => row.deckId);
+
+      const toAdd = input.deckIds.filter((id) => !currentDeckIds.includes(id));
+      const toRemove = currentDeckIds.filter(
+        (id) => !input.deckIds.includes(id),
+      );
+
+      toAdd.map(async (v) => {
+        await ctx.prisma.$queryRawTyped(addFlashToDeck(v, input.flashId));
+      });
+      await ctx.prisma.deckFlash.createMany({
+        data: toAdd.map((deckId) => ({
+          deckId,
+          flashId: input.flashId,
+        })),
+        skipDuplicates: true,
+      });
+
+      toRemove.map(async (v) => {
+        await ctx.prisma.$queryRawTyped(deleteFromDeck(v, input.flashId));
+        const isFlash = await ctx.prisma.$queryRawTyped(
+          checkFlashExist(input.flashId),
+        );
+        if (!isFlash) {
+          await ctx.prisma.$queryRawTyped(deleteFlash(input.flashId));
+        }
+      });
+      await ctx.prisma.deckFlash.deleteMany({
+        where: {
+          flashId: input.flashId,
+          deckId: { in: toRemove },
+        },
+      });
+
+      return { added: toAdd, removed: toRemove };
+    }),
 
   getFlashProgress: protectedProcedure
     .input(z.object({ deckId: z.string(), flashId: z.string() }))
