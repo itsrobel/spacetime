@@ -25,11 +25,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Google({
       authorization: {
         params: {
-          scope: 'openid email profile https://www.googleapis.com/auth/calendar'
-        }
-      }
-    })
+          scope:
+            "openid email profile https://www.googleapis.com/auth/calendar",
+        },
+      },
+    }),
   ],
+  trustHost: true,
   basePath: "/auth",
   session: { strategy: "jwt" },
   callbacks: {

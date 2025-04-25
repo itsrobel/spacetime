@@ -106,9 +106,17 @@ export const deckRouter = createTRPCRouter({
       const flashcards = await ctx.prisma.$queryRawTyped(
         getFlashCardsInDesk(input.deckId),
       );
-      const masteryDistribution = (await ctx.prisma.$queryRawTyped(
+      const rawRows = (await ctx.prisma.$queryRawTyped(
         getDeckMasteryDistribution(input.deckId),
       )) as unknown as MasteryDistributionRow[];
+
+      const masteryDistribution: MasteryDistributionRow[] = rawRows.map(
+        (row) => ({
+          progress: row.progress,
+          count: typeof row.count === "bigint" ? Number(row.count) : row.count,
+        }),
+      );
+
       // Calculate overall progress percentage
       const progress = calculateDeckProgress(flashcards);
 
