@@ -29,7 +29,7 @@ export default function CreateDeck() {
     api.deck.createDeck.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["deck.getDecks"],
+          queryKey: api.deck.getDecks.queryKey(),
         });
         setNewDeckName("");
       },

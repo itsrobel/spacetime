@@ -42,7 +42,7 @@ export default function FlashcardContent({
               <h3
                 className={`mb-4 font-semibold ${isMobile ? "text-2xl" : "text-xl"}`}
               >
-                {card.front}
+                {card.title}
               </h3>
               <p className="text-sm text-muted-foreground">
                 {isMobile ? "Tap to flip" : "Tap to reveal answer"}
@@ -68,7 +68,7 @@ export default function FlashcardContent({
               <h3
                 className={`mb-4 font-semibold ${isMobile ? "text-2xl" : "text-xl"}`}
               >
-                {card.back}
+                {card.content}
               </h3>
             </div>
           </CardContent>

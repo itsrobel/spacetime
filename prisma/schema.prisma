@@ -9,48 +9,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Deck {
-  id         String       @id @default(dbgenerated("(uuid())")) @db.Char(36)
-  name       String       @db.Text
-  userGoogleId String       @unique @db.Char(36) // Added unique constraint
-  public     AccessLevel  @default(PRIVATE) // Using enum instead of TinyInt
-  accesses   DeckAccess[]
-  flashcards Flash[]      @relation("DeckFlashcards")
-  DeckFlash  DeckFlash[]
-
+  id           String      @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  name         String      @db.Text
+  userGoogleId String      @db.Char(36) // Added unique constraint
+  public       AccessLevel @default(PRIVATE) // Using enum instead of TinyInt
+  // accesses   DeckAccess[]
+  flashcards   Flash[]     @relation("DeckFlashcards")
+  DeckFlash    DeckFlash[]
 }
 
 model Flash {
-  id        String      @id @default(dbgenerated("(uuid())")) @db.Char(36)
-  userGoogleId String       @unique @db.Char(36) // Added unique constraint
-  title     String      @db.Text
-  content   String      @db.Text
-  decks     Deck[]      @relation("DeckFlashcards")
-  DeckFlash DeckFlash[]
+  id           String      @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  userGoogleId String      @db.Char(36) // Added unique constraint
+  title        String      @db.Text
+  content      String      @db.Text
+  decks        Deck[]      @relation("DeckFlashcards")
+  DeckFlash    DeckFlash[]
 }
 
 model DeckFlash {
-  deck              Deck          @relation(fields: [deckId], references: [id])
-  deckId            String        @db.Char(36)
-  flash             Flash         @relation(fields: [flashId], references: [id])
-  flashId           String        @db.Char(36)
-  progress          FlashProgress @default(BEGIN) // Per-deck progress tracking
+  deck               Deck          @relation(fields: [deckId], references: [id])
+  deckId             String        @db.Char(36)
+  flash              Flash         @relation(fields: [flashId], references: [id])
+  flashId            String        @db.Char(36)
+  progress           FlashProgress @default(BEGIN) // Per-deck progress tracking
   consecutiveCorrect Int           @default(0) // Counter for consecutive "I know" answers
-  createdAt         DateTime      @default(now())
+  createdAt          DateTime      @default(now())
 
   @@id([deckId, flashId])
   @@index([deckId])
   @@index([flashId])
 }
 
-model DeckAccess {
-  deck      Deck        @relation(fields: [deckId], references: [id])
-  deckId    String      @db.Char(36)
-  userGoogleId String       @unique @db.Char(36) // Added unique constraint
-  level     AccessLevel @default(VIEW)
-  createdAt DateTime    @default(now())
-}
+// model DeckAccess {
+//   deck      Deck        @relation(fields: [deckId], references: [id])
+//   deckId    String      @db.Char(36)
+//   userGoogleId String   @db.Char(36) // Added unique constraint
+//   level     AccessLevel @default(VIEW)
+//   createdAt DateTime    @default(now())
+// }
 
 enum AccessLevel {
   PRIVATE // 0 - For Deck.public

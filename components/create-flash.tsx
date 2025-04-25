@@ -115,15 +115,17 @@ export default function CreateFlashCard() {
               </div>
             </div>
             {deckOptions && (
-              <MultiSelectCombobox
-                items={deckOptions}
-                placeholder="No frameworks selected"
-                searchPlaceholder="Search framework..."
-                emptyMessage="No framework found."
-                onChange={(values) => {
-                  setForm((prev) => ({ ...prev, deckIds: values }));
-                }}
-              />
+              <div>
+                <MultiSelectCombobox
+                  items={deckOptions}
+                  placeholder="No frameworks selected"
+                  searchPlaceholder="Search framework..."
+                  emptyMessage="No framework found."
+                  onChange={(values) => {
+                    setForm((prev) => ({ ...prev, deckIds: values }));
+                  }}
+                />
+              </div>
             )}
             <SheetFooter className="bottom-0">
               <Button type="submit">Save changes</Button>

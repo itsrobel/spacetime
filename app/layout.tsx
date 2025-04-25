@@ -4,7 +4,6 @@ import { TRPCReactProvider } from "@/lib/trpc/client";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -22,7 +21,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
       <body className={inter.className}>
         <div className="flex h-full min-h-screen w-full flex-col justify-between">
           <Header />
-          <main className="mx-auto w-full max-w-3xl flex-auto px-4 py-4 sm:px-6 md:py-6">
+          <main className="mx-auto w-full  flex-auto px-4 py-4 sm:px-6 md:py-6">
             <TRPCReactProvider>{children}</TRPCReactProvider>
           </main>
           <Toaster />

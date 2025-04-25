@@ -45,10 +45,8 @@ export const deckRouter = createTRPCRouter({
         getFlashCardsInDesk(input.deckId),
       );
 
-      // Calculate deck progress
       const progress = calculateDeckProgress(flashcards);
 
-      // Create a calendar event with progress information
       const eventTitle = input.eventTitle || "Flashcard Deck Review";
       const eventDescription =
         input.eventDescription ||
@@ -86,7 +84,6 @@ export const deckRouter = createTRPCRouter({
         const flashcards = await ctx.prisma.$queryRawTyped(
           getFlashCardsInDesk(input.deckId),
         );
-        // const decks = await ctx.prisma.$queryRawTyped(getDecks(gUser.id));
 
         return { flashcards };
       }

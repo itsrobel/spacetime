@@ -14,10 +14,12 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 
 export interface ComboboxItem {
@@ -27,6 +29,7 @@ export interface ComboboxItem {
 
 interface MultiSelectComboboxProps {
   items: ComboboxItem[];
+  title?: string;
   placeholder?: string;
   emptyMessage?: string;
   searchPlaceholder?: string;
@@ -35,6 +38,7 @@ interface MultiSelectComboboxProps {
 
 export function MultiSelectCombobox({
   items,
+  title = "Select Decks",
   placeholder = "No items selected",
   emptyMessage = "No item found.",
   searchPlaceholder = "Search item...",
@@ -62,41 +66,20 @@ export function MultiSelectCombobox({
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <div className="flex flex-col gap-2 w-full">
-        <div className="flex items-start gap-2 w-full">
-          <PopoverTrigger asChild>
-            <div className="w-full min-h-[38px] border rounded-md p-1 flex flex-wrap gap-1">
-              {value.length === 0 ? (
-                <p className="text-sm text-muted-foreground p-1.5">
-                  {placeholder}
-                </p>
-              ) : (
-                value.map((val) => (
-                  <Badge
-                    key={val}
-                    variant="secondary"
-                    className="flex items-center gap-1"
-                  >
-                    {getLabel(val)}
-                    <X
-                      className="h-3 w-3 cursor-pointer hover:text-destructive"
-                      onClick={() => removeItem(val)}
-                    />
-                  </Badge>
-                ))
-              )}
-            </div>
-          </PopoverTrigger>
-        </div>
-
-        <PopoverContent
-          className="w-[var(--radix-popover-trigger-width)] p-0"
-          align="start"
-        >
-          <Command>
+    <div className="flex flex-col md:flex-row gap-4 items-start">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" size="icon">
+            <Plus className="h-4 w-4" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+          </DialogHeader>
+          <Command className="rounded-lg border shadow-md">
             <CommandInput placeholder={searchPlaceholder} className="h-9" />
-            <CommandList>
+            <CommandList className="max-h-[300px]">
               <CommandEmpty>{emptyMessage}</CommandEmpty>
               <CommandGroup>
                 {items.map((item) => (
@@ -105,22 +88,51 @@ export function MultiSelectCombobox({
                     value={item.value}
                     onSelect={handleSelect}
                   >
-                    {item.label}
-                    <Check
-                      className={cn(
-                        "ml-auto",
-                        value.includes(item.value)
-                          ? "opacity-100"
-                          : "opacity-0",
-                      )}
-                    />
+                    <div className="flex items-center gap-2 w-full">
+                      <div
+                        className={cn(
+                          "flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                          value.includes(item.value)
+                            ? "bg-primary text-primary-foreground"
+                            : "opacity-50",
+                        )}
+                      >
+                        {value.includes(item.value) && (
+                          <Check className="h-3 w-3" />
+                        )}
+                      </div>
+                      <span>{item.label}</span>
+                    </div>
                   </CommandItem>
                 ))}
               </CommandGroup>
             </CommandList>
           </Command>
-        </PopoverContent>
+          <Button className="w-full pb-2 mb-2" onClick={() => setOpen(false)}>
+            Done
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      <div className="min-h-[38px] border rounded-md p-1 flex flex-wrap gap-1 min-w-[300px]">
+        {value.length === 0 ? (
+          <p className="text-sm text-muted-foreground p-1.5">{placeholder}</p>
+        ) : (
+          value.map((val) => (
+            <Badge
+              key={val}
+              variant="secondary"
+              className="flex items-center gap-1"
+            >
+              {getLabel(val)}
+              <X
+                className="h-3 w-3 cursor-pointer hover:text-destructive"
+                onClick={() => removeItem(val)}
+              />
+            </Badge>
+          ))
+        )}
       </div>
-    </Popover>
+    </div>
   );
 }
