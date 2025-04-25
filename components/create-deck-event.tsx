@@ -27,25 +27,22 @@ export default function CreateDeckEvent({ deckId, deckName }: CreateEventProps) 
     try {
       setIsLoading(true);
       
-      // Set event time to now + 1 hour
-      const startDateTime = new Date();
-      startDateTime.setHours(startDateTime.getHours() + 1);
+      // The deck router will compute the startDateTime based on mastery level
+      // We just pass in the current date and it will be adjusted by the server
+      const now = new Date();
       
-      // Event duration is 1 hour
-      const endDateTime = new Date(startDateTime);
-      endDateTime.setHours(endDateTime.getHours() + 1);
-      
-      // Create the calendar event
+      // Create the calendar event - start time will be adjusted on the server
+      // based on the mastery distribution of the deck
       const result = await createEventMutation.mutateAsync({
         deckId,
         eventTitle: `Review: ${deckName}`,
         eventDescription: `Scheduled review for your flashcard deck: ${deckName}`,
-        startDateTime,
-        endDateTime,
+        startDateTime: now,
+        endDateTime: new Date(now.getTime() + 60 * 60 * 1000), // 1 hour later
       });
       
       toast.success("Event Created", {
-        description: `Added a review event to your calendar. Current progress: ${result.progress}%`,
+        description: `Added a review event to your calendar (${result.progress}% mastery). Check your Google Calendar for timing details.`,
       });
     } catch (error) {
       console.error("Failed to create calendar event:", error);
@@ -67,8 +64,8 @@ export default function CreateDeckEvent({ deckId, deckName }: CreateEventProps) 
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
-          This will create a calendar event based on your current progress with this deck.
-          The event will be scheduled for one hour from now.
+          This will create a calendar event with timing based on your mastery level in this deck.
+          Beginner-level decks will be scheduled sooner, while mastered decks will be scheduled further in the future.
         </p>
       </CardContent>
       <CardFooter className="flex justify-end">
