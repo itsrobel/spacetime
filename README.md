@@ -44,3 +44,33 @@ what should the flashcard table look like?
 - [ ] make links that are shareable
 - [ ] delete the User table and just use the information from google
 - [ ] add auth check to every endpoint
+
+# ERD
+
+```mermaid
+erDiagram
+    Deck {
+        string id PK "char(36)"
+        string name "text"
+        string userGoogleId "char(36)"
+        AccessLevel public "default: PRIVATE"
+    }
+
+    Flash {
+        string id PK "char(36)"
+        string userGoogleId "char(36)"
+        string title "text"
+        string content "text"
+    }
+
+    DeckFlash {
+        string deckId PK,FK "char(36)"
+        string flashId PK,FK "char(36)"
+        FlashProgress progress "default: BEGIN"
+        int consecutiveCorrect "default: 0"
+        datetime createdAt "default: now()"
+    }
+
+    Deck ||--o{ DeckFlash : contains
+    Flash ||--o{ DeckFlash : included_in
+```
